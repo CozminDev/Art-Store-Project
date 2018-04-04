@@ -1,4 +1,5 @@
-﻿using ArtStore.Services;
+﻿using ArtStore.Data;
+using ArtStore.Services;
 using ArtStore.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,10 +13,12 @@ namespace ArtStore.Controllers
     public class AppController:Controller
     {
         private readonly INullMailService _MailService;
+        private readonly IArtRepository _repo;
 
-        public AppController(INullMailService MailService)
+        public AppController(INullMailService MailService,IArtRepository repo)
         {
             _MailService = MailService;
+            _repo = repo;
         }
         public IActionResult Index()
         {
@@ -41,6 +44,11 @@ namespace ArtStore.Controllers
                 ModelState.Clear();
             }
             return View();
+        }
+        public IActionResult Shop()
+        {
+            var result = _repo.GetAllProducts();
+            return View(result);
         }
     }
 }

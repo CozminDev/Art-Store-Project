@@ -19,7 +19,14 @@ namespace Art_Store
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+            .ConfigureAppConfiguration(Config)
                 .UseStartup<Startup>()
                 .Build();
+
+        private static void Config(WebHostBuilderContext ctx, IConfigurationBuilder builder)
+        {
+            builder.Sources.Clear();
+            builder.AddJsonFile("config.json", false);
+        }
     }
 }

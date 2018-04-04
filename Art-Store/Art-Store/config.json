@@ -1,0 +1,11 @@
+{
+  "ConnectionStrings": {
+    "ArtConnectionString": "server=(localdb)\\ProjectsV13;Database=ArtStoreDb;Integrated Security=true;MultipleActiveResultSets=true;"
+  },
+  "Logging": {
+    "Loglevel": {
+      "Default": "Information",
+      "Microsoft": "Warning"
+    }
+  }
+}
