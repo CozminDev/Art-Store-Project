@@ -1,4 +1,5 @@
 ﻿using ArtStore.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,21 @@ namespace ArtStore.Data
 			_ctx = ctx;
 			_logger = logger;
 		}
-			
+
+		public IEnumerable<Order> GetAllOrders()
+		{
+			try
+			{
+				return _ctx.Orders.Include(o=>o.Items).ThenInclude(i=>i.Product).ToList();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Failed to get all Orders: {ex}");
+				return null;
+
+			}
+		}
+
 		public IEnumerable<Product> GetAllProducts()
 		{
 			try

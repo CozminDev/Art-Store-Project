@@ -30,15 +30,16 @@ namespace ArtStore.Data
                 var json = File.ReadAllText(filepath);
                 var products = JsonConvert.DeserializeObject<IEnumerable<Product>>(json);
                 _ctx.Products.AddRange(products);
-                var order = new Order
+                var order = new Order()
                 {
                     OrderDate = DateTime.Now,
                     OrderNumber = "1234",
                     Items = new List<OrderItem>(){
-                        new OrderItem
+                        new OrderItem()
                         {
+                            Product=products.First(),
                             Quantity=5,
-                            UnitPrice=99
+                            UnitPrice=products.First().Price
                         }
                     }
                 };
