@@ -41,7 +41,7 @@ namespace ArtStore.Controllers
             }
         }
         [HttpGet("{id}")]
-        public IActionResult GetAllOrdersById(int id)
+        public IActionResult GetOrderById(int id)
         {
             try
             {

@@ -1,4 +1,5 @@
 ﻿using ArtStore.Data.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ArtStore.Data
 {
-    public class ArtContext: DbContext
+    public class ArtContext: IdentityDbContext<StoreUser>
     {
         public ArtContext(DbContextOptions<ArtContext> options):base(options)
         {

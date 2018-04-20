@@ -11,9 +11,10 @@ using System;
 namespace ArtStore.Migrations
 {
     [DbContext(typeof(ArtContext))]
-    partial class ArtContextModelSnapshot : ModelSnapshot
+    [Migration("20180420153141_Identity")]
+    partial class Identity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

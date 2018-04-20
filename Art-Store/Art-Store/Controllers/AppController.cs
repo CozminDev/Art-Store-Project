@@ -1,6 +1,7 @@
 ﻿using ArtStore.Data;
 using ArtStore.Services;
 using ArtStore.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace ArtStore.Controllers
         }
         public IActionResult Index()
         {
-            var result = _repo.GetAllProducts();
+            var result = _repo.GetAllProducts().Select(p=>p.ArtId).Distinct().ToList();
             return View(result);
         }
         [HttpGet]
@@ -46,6 +47,7 @@ namespace ArtStore.Controllers
             }
             return View();
         }
+        [Authorize]
         public IActionResult Shop()
         {
             var result = _repo.GetAllProducts().OrderBy(p=>p.ArtId);

@@ -26,7 +26,7 @@ namespace ArtStore.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public IActionResult Get(int orderId)
+        public IActionResult GetOrderItem(int orderId)
         {
             var order = _repository.GetOrderById(orderId);
             if (order != null) return Ok(_mapper.Map<IEnumerable<OrderItem>, IEnumerable<OrderItemViewModel>>(order.Items));
@@ -34,7 +34,7 @@ namespace ArtStore.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int orderId, int id)
+        public IActionResult GetOrderItemById(int orderId, int id)
         {
             var order = _repository.GetOrderById(orderId);
             if (order != null)

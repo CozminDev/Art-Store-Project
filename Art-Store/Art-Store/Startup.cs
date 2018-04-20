@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ArtStore.Data;
+using ArtStore.Data.Entities;
 using ArtStore.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,6 +38,10 @@ namespace Art_Store
             services.AddTransient<ArtSeeder>();
             services.AddScoped<IArtRepository,ArtRepository>();
             services.AddAutoMapper();
+            services.AddIdentity<StoreUser, IdentityRole>(cfg =>
+            {
+                cfg.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<ArtContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +51,8 @@ namespace Art_Store
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseAuthentication();
             app.UseMvc(cfg =>
             {
                 cfg.MapRoute("Default",
@@ -60,7 +68,7 @@ namespace Art_Store
                 using(var scope = app.ApplicationServices.CreateScope())
                 {
                     var seeder = scope.ServiceProvider.GetService<ArtSeeder>();
-                    seeder.Seed();
+                    seeder.Seed().Wait();
                 }
             }
         }

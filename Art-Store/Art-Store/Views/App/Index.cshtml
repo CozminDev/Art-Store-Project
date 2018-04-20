@@ -1,24 +1,15 @@
-﻿@{
-    ViewBag.Title = "Art Store";
+﻿
+@{
+    ViewBag.Title = "Gallery";
 }
 
-<div class="row">
-    <div class="col-md-2">
-        <img src="img/VanGogh.jpg" />
+
+@foreach (var p in Model)
+{
+    <div class="gallery_product col-lg-4 col-md-4 col-sm-4 col-xs-6 filter hdpe">
+        <img src="~/img/@(p).jpg" style="width:365px;height:365px" class="img-responsive" />
     </div>
-    <div class="col-md-2">
-        <img src="~/img/SK-C-597.jpg" style="width:200px;height:252px" />
-    </div>
-    <div class="col-md-2">
-        <img src="~/img/SK-C-5.jpg" style="width:200px;height:252px" />
-    </div>
-    <div class="col-md-2">
-        <img src="~/img/SK-C-251.jpg" style=";width:200px;height:252px" />
-    </div>
-    <div class="col-md-2">
-        <img src="~/img/SK-C-1747.jpg" style="width:200px;height:252px" />
-    </div>
-    <div class="col-md-2">
-        <img src="~/img/SK-C-216.jpg" style="width:200px;height:252px" />
-    </div>
-</div>
+
+}
+
+
