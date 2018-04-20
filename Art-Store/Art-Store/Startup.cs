@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArtStore.Data;
 using ArtStore.Services;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -34,6 +35,7 @@ namespace Art_Store
             });
             services.AddTransient<ArtSeeder>();
             services.AddScoped<IArtRepository,ArtRepository>();
+            services.AddAutoMapper();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

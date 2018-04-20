@@ -20,6 +20,11 @@ namespace ArtStore.Data
 			_logger = logger;
 		}
 
+		public void AddEntity(object obj)
+		{
+			_ctx.Add(obj);
+		}
+
 		public IEnumerable<Order> GetAllOrders()
 		{
 			try
@@ -32,6 +37,11 @@ namespace ArtStore.Data
 				return null;
 
 			}
+		}
+
+		public Order GetOrderById(int id)
+		{
+			return _ctx.Orders.Include(o => o.Items).ThenInclude(i => i.Product).Where(p=>p.Id==id).FirstOrDefault();
 		}
 
 		public IEnumerable<Product> GetAllProducts()

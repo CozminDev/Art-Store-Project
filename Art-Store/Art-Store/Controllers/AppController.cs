@@ -22,7 +22,8 @@ namespace ArtStore.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            var result = _repo.GetAllProducts();
+            return View(result);
         }
         [HttpGet]
         public IActionResult Contact()
@@ -47,7 +48,7 @@ namespace ArtStore.Controllers
         }
         public IActionResult Shop()
         {
-            var result = _repo.GetAllProducts();
+            var result = _repo.GetAllProducts().OrderBy(p=>p.ArtId);
             return View(result);
         }
     }

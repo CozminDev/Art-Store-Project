@@ -9,6 +9,7 @@ namespace ArtStore.Data
         IEnumerable<Product> GetAllProducts();
         IEnumerable<Order> GetAllOrders();
         bool SaveAll();
-        
+        Order GetOrderById(int id);
+        void AddEntity(object obj);
     }
 }

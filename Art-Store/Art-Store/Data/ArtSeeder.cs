@@ -23,6 +23,7 @@ namespace ArtStore.Data
 
         public void Seed()
         {
+            
             _ctx.Database.EnsureCreated();
             if (!_ctx.Products.Any())
             {
