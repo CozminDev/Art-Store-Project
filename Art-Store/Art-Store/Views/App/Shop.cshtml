@@ -1,20 +1,10 @@
 ﻿@model IEnumerable<Product>
 
-<h4>Count:@Model.Count()</h4>
-
-@foreach (var q in Model)
-{
-    <div class="col-md-3">
-        <div class="well well-sm">
-            <img src="~/img/@(q.ArtId).jpg" class="img-responsive" />
-            <h3>@q.Category-@q.Size</h3>
-            <ul>
-                <li>Price: @q.Price</li>
-                <li>Artist: @q.Artist</li>
-                <li>Title: @q.Title</li>
-                <li>Description: @q.ArtDescription</li>
-            </ul>
-        </div>
-    </div>
+@section scripts {
+    <script src="~/ClientApp/dist/inline.bundle.js"></script>
+    <script src="~/ClientApp/dist/polyfills.bundle.js"></script>
+    <script src="~/ClientApp/dist/styles.bundle.js"></script>
+    <script src="~/ClientApp/dist/vendor.bundle.js"></script>
+    <script src="~/ClientApp/dist/main.bundle.js"></script>
 }
-
+<the-shop></the-shop>

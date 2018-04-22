@@ -2,10 +2,13 @@
 using ArtStore.Data.Entities;
 using ArtStore.ViewModels;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +16,7 @@ using System.Threading.Tasks;
 namespace ArtStore.Controllers
 {
     [Route("/api/orders/{orderId}/items")]
+    [Authorize(AuthenticationSchemes =JwtBearerDefaults.AuthenticationScheme)]
     public class OrderItemController : Controller
     {
         private readonly IArtRepository _repository;
@@ -28,7 +32,7 @@ namespace ArtStore.Controllers
         [HttpGet]
         public IActionResult GetOrderItem(int orderId)
         {
-            var order = _repository.GetOrderById(orderId);
+            var order = _repository.GetOrderById(User.Identity.Name,orderId);
             if (order != null) return Ok(_mapper.Map<IEnumerable<OrderItem>, IEnumerable<OrderItemViewModel>>(order.Items));
             return NotFound();
         }
@@ -36,7 +40,7 @@ namespace ArtStore.Controllers
         [HttpGet("{id}")]
         public IActionResult GetOrderItemById(int orderId, int id)
         {
-            var order = _repository.GetOrderById(orderId);
+            var order = _repository.GetOrderById(User.Identity.Name,orderId);
             if (order != null)
             {
                 var item = order.Items.Where(i => i.Id == id).FirstOrDefault();

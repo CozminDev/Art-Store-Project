@@ -25,11 +25,15 @@ namespace ArtStore.Data
 			_ctx.Add(obj);
 		}
 
-		public IEnumerable<Order> GetAllOrders()
+		public IEnumerable<Order> GetAllOrders(bool includeItems)
 		{
 			try
 			{
-				return _ctx.Orders.Include(o=>o.Items).ThenInclude(i=>i.Product).ToList();
+				if (includeItems)
+				{
+					return _ctx.Orders.Include(o => o.Items).ThenInclude(i => i.Product).ToList();
+				}
+				else return _ctx.Orders.ToList();
 			}
 			catch (Exception ex)
 			{
@@ -39,9 +43,13 @@ namespace ArtStore.Data
 			}
 		}
 
-		public Order GetOrderById(int id)
+		public Order GetOrderById(string username,int id)
 		{
-			return _ctx.Orders.Include(o => o.Items).ThenInclude(i => i.Product).Where(p=>p.Id==id).FirstOrDefault();
+			return _ctx.Orders
+				.Include(o => o.Items)
+				.ThenInclude(i => i.Product)
+				.Where(p=>p.Id==id && p.User.UserName==username)
+				.FirstOrDefault();
 		}
 
 		public IEnumerable<Product> GetAllProducts()
@@ -60,6 +68,31 @@ namespace ArtStore.Data
 		public bool SaveAll()
 		{
 			return _ctx.SaveChanges() > 0;
+		}
+
+		public IEnumerable<Order> GetAllOrdersByUser(string username, bool includeItems)
+		{
+			if (includeItems)
+			{
+				return _ctx.Orders
+					.Where(o=>o.User.UserName==username)
+					.Include(o => o.Items)
+					.ThenInclude(i => i.Product)
+					.ToList();
+			}
+			else return _ctx.Orders
+					.Where(o => o.User.UserName == username)
+					.ToList();
+		}
+
+		public void AddOrder(Order newOrder)
+		{
+			foreach(var item in newOrder.Items)
+			{
+				item.Product = _ctx.Products.Find(item.Product.Id);
+			}
+
+			AddEntity(newOrder);
 		}
 	}		
 }

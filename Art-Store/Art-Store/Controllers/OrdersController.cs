@@ -2,6 +2,9 @@
 using ArtStore.Data.Entities;
 using ArtStore.ViewModels;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,26 +15,34 @@ using System.Threading.Tasks;
 
 namespace ArtStore.Controllers
 {
+    
     [Route("api/orders")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class OrdersController:Controller
     {
         private readonly IArtRepository _repo;
         private readonly ILogger<OrdersController> _logger;
         private readonly IMapper _mapper;
+        private readonly UserManager<StoreUser> _userManager;
 
-        public OrdersController(IArtRepository repo, ILogger<OrdersController> logger,IMapper mapper)
+        public OrdersController(IArtRepository repo, ILogger<OrdersController> logger,IMapper mapper,UserManager<StoreUser> userManager)
         {
             _repo = repo;
             _logger = logger;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         [HttpGet]
-        public IActionResult GetAllOrders()
+        public IActionResult GetAllOrders(bool includeItems=true)
         {
             try
             {
-                return Ok(_mapper.Map<IEnumerable<Order>,IEnumerable<OrderViewModel>>(_repo.GetAllOrders()));
+                var username = User.Identity.Name;
+
+                var results = _repo.GetAllOrdersByUser(username, includeItems);
+
+                return Ok(_mapper.Map<IEnumerable<Order>,IEnumerable<OrderViewModel>>(results));
             }
             catch (Exception ex)
             {
@@ -40,14 +51,16 @@ namespace ArtStore.Controllers
 
             }
         }
+
+
         [HttpGet("{id}")]
         public IActionResult GetOrderById(int id)
         {
             try
             {
-                if (_repo.GetOrderById(id) != null)
+                if (_repo.GetOrderById(User.Identity.Name,id) != null)
                 {
-                    return Ok(_mapper.Map<Order,OrderViewModel>(_repo.GetOrderById(id)));
+                    return Ok(_mapper.Map<Order,OrderViewModel>(_repo.GetOrderById(User.Identity.Name,id)));
                 }
                 else return NotFound();
                 
@@ -59,8 +72,10 @@ namespace ArtStore.Controllers
 
             }
         }
+
+
         [HttpPost]
-        public IActionResult Post([FromBody] OrderViewModel model)
+        public async Task<IActionResult> Post([FromBody] OrderViewModel model)
         {
             try
             {
@@ -71,7 +86,13 @@ namespace ArtStore.Controllers
                     {
                         newOrder.OrderDate = DateTime.Now;
                     }
-                    _repo.AddEntity(newOrder);
+
+                    var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
+                    newOrder.User = currentUser;
+
+                    _repo.AddOrder(newOrder);
+
+
                     if (_repo.SaveAll())
                     {
                         var vm = _mapper.Map<Order, OrderViewModel>(newOrder);
@@ -88,5 +109,6 @@ namespace ArtStore.Controllers
             }
             return BadRequest("Failed to post Order");
         }
+        
     }
 }

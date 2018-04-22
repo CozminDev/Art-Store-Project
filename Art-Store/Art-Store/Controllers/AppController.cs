@@ -47,7 +47,6 @@ namespace ArtStore.Controllers
             }
             return View();
         }
-        [Authorize]
         public IActionResult Shop()
         {
             var result = _repo.GetAllProducts().OrderBy(p=>p.ArtId);

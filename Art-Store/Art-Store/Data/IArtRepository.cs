@@ -7,9 +7,11 @@ namespace ArtStore.Data
     public interface IArtRepository
     {
         IEnumerable<Product> GetAllProducts();
-        IEnumerable<Order> GetAllOrders();
+        IEnumerable<Order> GetAllOrders(bool includeItems);
         bool SaveAll();
-        Order GetOrderById(int id);
+        Order GetOrderById(string username,int id);
         void AddEntity(object obj);
+        IEnumerable<Order> GetAllOrdersByUser(string username, bool includeItems);
+        void AddOrder(Order newOrder);
     }
 }
